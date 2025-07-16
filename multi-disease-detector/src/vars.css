@@ -1,0 +1,26 @@
+:root {
+  /* Base Colors */
+  --background-color: #121212;         /* App background */
+  --container-color: #1e1e1e;          /* Cards, forms, modals */
+
+  /* Text Colors */
+  --text-color: #e0e0e0;               /* Main readable text */
+  --text-secondary: #b0b0b0;           /* Labels, hints, less important text */
+  --text-muted: #808080;               /* Subtle text, placeholders */
+
+  /* Accent Colors */
+  --primary-color: #00bfa6;            /* Buttons, highlights */
+  --primary-color-hover: #00a896;
+  --accent-color: #26c6da;             /* Input borders, links */
+  --highlight-color: #fbc02d;          /* Warning, info badge, or selection */
+
+  /* UI Elements */
+  --border-radius: 6px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --font-family: "Inter", sans-serif;
+
+  /* Component States */
+  --input-bg: #1a1a1a;
+  --input-border: #333;
+  --input-focus-border: #26c6da;
+}

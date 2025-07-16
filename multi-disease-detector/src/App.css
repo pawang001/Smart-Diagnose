@@ -1,0 +1,69 @@
+@import "./vars.css";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Outfit", Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  width: 100%;
+  height: 100%;
+}
+
+/* Buttons */
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--primary-color-hover);
+}
+
+/* Inputs */
+input, select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  width: 100%;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--input-focus-border);
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: var(--text-color);
+}
+
+/* Labels / Secondary Text */
+label {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* Optional: Small helper text */
+small {
+  color: var(--text-muted);
+}
