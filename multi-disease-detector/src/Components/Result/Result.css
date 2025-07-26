@@ -1,0 +1,76 @@
+    .result-content-wrapper {
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 0;
+    }
+
+    /* Loading Spinner */
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--color-border);
+      border-bottom-color: var(--color-primary);
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Messages */
+    .api-error-message, .default-message {
+        color: var(--color-text-secondary);
+        font-weight: 500;
+        text-align: center;
+        padding: 0 1rem;
+    }
+
+    .api-error-message {
+        color: var(--color-danger);
+    }
+    
+    /* Input field error styling */
+    .input-error {
+        border-color: var(--color-danger) !important;
+    }
+    .error-message {
+        color: var(--color-danger);
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Disease Info Card */
+    .disease-info {
+        width: 100%;
+    }
+
+    .result-image {
+        width: 100%;
+        height: auto;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        background-color: var(--color-background);
+    }
+
+    .info-text h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    .disease-info .info-text h3 {
+        color: var(--color-text-primary);
+    }
+
+    .disease-info p {
+        margin: 0;
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+    }
+    

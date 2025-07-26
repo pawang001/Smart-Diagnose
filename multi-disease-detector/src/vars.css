@@ -1,26 +1,15 @@
 :root {
-  /* Base Colors */
-  --background-color: #121212;         /* App background */
-  --container-color: #1e1e1e;          /* Cards, forms, modals */
+  --color-primary: #8b5cf6; /* Vibrant Purple */
+  --color-primary-light: #c4b5fd; /* Lighter Lavender */
+  --color-secondary: #f59e0b; /* Bold Amber/Orange */
+  --color-background: #0d1117; /* Deep, near-black */
+  --color-surface: #161b22; /* Dark grey surface */
+  --color-text-primary: #e6edf3; /* Light grey/off-white */
+  --color-text-secondary: #848d97; /* Medium grey */
+  --color-border: #30363d; /* Subtle dark border */
+  --color-danger: #f43f5e; /* Bright Rose/Red */
 
-  /* Text Colors */
-  --text-color: #e0e0e0;               /* Main readable text */
-  --text-secondary: #b0b0b0;           /* Labels, hints, less important text */
-  --text-muted: #808080;               /* Subtle text, placeholders */
-
-  /* Accent Colors */
-  --primary-color: #00bfa6;            /* Buttons, highlights */
-  --primary-color-hover: #00a896;
-  --accent-color: #26c6da;             /* Input borders, links */
-  --highlight-color: #fbc02d;          /* Warning, info badge, or selection */
-
-  /* UI Elements */
-  --border-radius: 6px;
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  --font-family: "Inter", sans-serif;
-
-  /* Component States */
-  --input-bg: #1a1a1a;
-  --input-border: #333;
-  --input-focus-border: #26c6da;
+  --font-family-sans: "Inter", sans-serif;
+  --spacing-unit: 8px;
+  --border-radius: 0.5rem;
 }

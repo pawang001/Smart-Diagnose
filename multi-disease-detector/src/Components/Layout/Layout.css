@@ -1,0 +1,47 @@
+.app-layout {
+  display: flex;
+}
+
+/* This wrapper is a fixed container on the left for the sidebar */
+.sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
+.page-content {
+  /* Margin to make space for the collapsed sidebar */
+  margin-left: 80px; 
+  width: calc(100% - 80px);
+  padding: 0;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When pinned, the margin expands to the full sidebar width */
+.page-content.pinned {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+}
+
+.content-wrapper {
+  padding: 1rem 2rem;
+}
+
+/* Add to src/components/Layout.css */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Below the sidebar but above content */
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
