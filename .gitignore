@@ -1,2 +1,13 @@
+# Python virtual environment and cache
 venv/
 __pycache__/
+*.pyc
+
+# Node.js dependencies and build files
+node_modules/
+build/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
