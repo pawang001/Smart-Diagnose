@@ -1,41 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {useWindowSize} from '../../Hooks/UseWindowSize'; // Import the new hook
 import './Layout.css';
 import Sidebar from '../Sidebar/Sidebar';
 
+const Icon = ({ path, className = '' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`icon ${className}`}>
+      <path strokeLinecap="round" strokeLinejoin="round" d={path} />
+    </svg>
+);
+
 const Layout = ({ children }) => {
+  const { width } = useWindowSize(); // Use our custom hook
+  const isMobile = width < 768;
+
+  // State for desktop sidebar pinning
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
+  // State for desktop sidebar hover
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
-  // State for mobile overlay menu
+  // State specifically for the mobile menu overlay
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Effect to check screen size
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Determine if the sidebar should be visually expanded
+  const isSidebarOpen = isMobile ? isMobileMenuOpen : (isSidebarPinned || isSidebarHovered);
 
-  // Determine if the sidebar should be visually open
-  const isSidebarOpen = !isMobile && (isSidebarPinned || isSidebarHovered);
-
-  // Toggle function for mobile and desktop
-  const toggleSidebar = () => {
-    if (isMobile) {
-      setIsMobileMenuOpen(!isMobileMenuOpen);
-    } else {
-      setIsSidebarPinned(!isSidebarPinned);
-    }
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+  
+  const toggleDesktopPin = () => {
+    setIsSidebarPinned(!isSidebarPinned);
   };
 
   return (
     <div className="app-layout">
+      {/* Mobile-only menu button, now correctly rendered */}
+      {isMobile && (
+        <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+          <Icon path="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </button>
+      )}
+
       {/* Backdrop for mobile overlay */}
       {isMobile && isMobileMenuOpen && (
-        <div className="sidebar-backdrop" onClick={() => setIsMobileMenuOpen(false)}></div>
+        <div className="sidebar-backdrop" onClick={toggleMobileMenu}></div>
       )}
 
       <div
@@ -44,9 +51,10 @@ const Layout = ({ children }) => {
         onMouseLeave={() => !isMobile && setIsSidebarHovered(false)}
       >
         <Sidebar
-          isOpen={isMobile ? isMobileMenuOpen : isSidebarOpen}
+          isOpen={isSidebarOpen}
           isPinned={isSidebarPinned}
-          togglePin={toggleSidebar}
+          togglePin={toggleDesktopPin}
+          onNavItemClick={isMobile ? toggleMobileMenu : undefined} // Close menu on mobile after click
         />
       </div>
 

@@ -132,3 +132,61 @@
     color: var(--color-text-secondary);
     font-weight: 500;
 }
+
+.past-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.past-record-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: var(--color-background);
+  border-radius: var(--border-radius);
+}
+
+.record-status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.record-status-dot.positive { background-color: var(--color-danger); }
+.record-status-dot.negative { background-color: var(--color-secondary); }
+
+.record-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows the date to be pushed to the right */
+}
+
+.record-disease-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.record-result {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.record-date {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* Input field error styling */
+.input-error {
+    border-color: var(--color-danger) !important;
+}
+.error-message {
+    color: var(--color-danger);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
