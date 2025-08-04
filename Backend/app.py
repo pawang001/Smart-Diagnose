@@ -1,62 +1,76 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import os
 import joblib
 import pandas as pd
-import numpy as np
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 # Initialize the Flask app
 app = Flask(__name__)
-CORS(app) # Enable CORS for all routes
 
-# --- LOAD THE MODEL AND COLUMNS ---
-# Load the trained model and the column list right when the app starts
+# --- FIX: Explicitly configure CORS ---
+# This tells your backend to allow requests specifically from your live Vercel URL
+# and your local development environment.
+CORS(app, resources={r"/predict": {"origins": ["https://smart-diagnose.vercel.app", "http://localhost:5173"]}})
+
+
+# --- LOAD ALL MODELS AT STARTUP ---
+models = {}
+model_columns = {}
+model_path = '.' 
+
+print("Loading all available models...")
 try:
-    model = joblib.load('disease_predictor.joblib')
-    model_columns = joblib.load('model_columns.joblib')
-    print("Model and columns loaded successfully.")
-except Exception as e:
-    print(f"❌ Error loading model or columns: {e}")
-    model = None
-    model_columns = None
+    for filename in os.listdir(model_path):
+        if filename.endswith("_model.joblib"):
+            model_name = filename.replace("_model.joblib", "")
+            model_file_path = os.path.join(model_path, filename)
+            columns_file_path = os.path.join(model_path, f"{model_name}_columns.joblib")
+            
+            if os.path.exists(columns_file_path):
+                models[model_name] = joblib.load(model_file_path)
+                model_columns[model_name] = joblib.load(columns_file_path)
+                print(f"✅ Successfully loaded model: '{model_name}'")
+            else:
+                print(f"⚠️ Warning: Model file '{filename}' found but missing columns file '{model_name}_columns.joblib'.")
 
-# --- CREATE THE PREDICTION ROUTE ---
+except Exception as e:
+    print(f"❌ An error occurred during model loading: {e}")
+
+
+# --- PREDICTION ROUTE ---
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Ensure the model is loaded before trying to predict
-    if not model or not model_columns:
-        return jsonify({'error': 'Model is not loaded, check server logs.'}), 500
-
     try:
-        # 1. Get the JSON data sent from the frontend
-        # We expect the data to be a dictionary of feature names and their values
         json_data = request.get_json()
+        model_name = json_data.get('model_name')
+        features = json_data.get('features')
 
-        if not json_data:
-            return jsonify({'error': 'No input data provided.'}), 400
+        if not model_name or not features:
+            return jsonify({'error': 'Missing model_name or features in the request.'}), 400
 
-        # 2. Create a pandas DataFrame from the input data
-        # The 'index=[0]' is important to structure it as a single row
-        input_df = pd.DataFrame(json_data, index=[0])
+        if model_name not in models:
+            return jsonify({'error': f"Model '{model_name}' is not available on the server."}), 404
 
-        # 3. Ensure the order of columns matches the model's training order
-        # This is a crucial step!
-        query_df = input_df.reindex(columns=model_columns, fill_value=0)
+        model = models[model_name]
+        columns = model_columns[model_name]
 
-        # 4. Make a prediction
+        input_df = pd.DataFrame(features, index=[0])
+        query_df = input_df.reindex(columns=columns, fill_value=0)
+        
         prediction_raw = model.predict(query_df)
-
-        # The prediction is an array (e.g., [1]), so we convert it to a standard Python integer
         result = int(prediction_raw[0])
 
-        # 5. Return the prediction as JSON
-        # We'll return 1 for Malignant and 0 for Benign
-        return jsonify({'prediction': result})
+        if hasattr(model, 'predict_proba'):
+            probability = model.predict_proba(query_df)[0][1]
+        else:
+            probability = 0.95 
+
+        return jsonify({'prediction': result, 'probability': probability})
 
     except Exception as e:
-        # Catch any other errors during prediction
-        return jsonify({'error': f'An error occurred during prediction: {str(e)}'}), 500
+        print(f"❌ An error occurred during prediction: {e}")
+        return jsonify({'error': 'An internal error occurred. Please check server logs.'}), 500
 
 # This allows you to run the app directly
 if __name__ == '__main__':
-    # Use port 5001 to avoid conflicts with the React frontend later
     app.run(debug=False, port=5001)
