@@ -1,27 +1,32 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from "./Components/Home/Home";
 import Footer from "./Components/Footer/Footer";
 import Layout from "./Components/Layout/Layout";
-import PredictionForm from "./Components/PredictionForm/PredictionForm";
+import Prediction from "./Components/PredictionForm/Prediction";
+import Result from "./Components/Result/Result";
+import History from "./Components/History/History";
 
 function App() {
   return (
-    <>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route
-          path="/predict"
-          element={
-            <Layout>
-              <PredictionForm />
-            </Layout>
-          }
+        <Route 
+          path="/predict" 
+          element={<Layout><Prediction /></Layout>} 
+        />
+        <Route 
+          path="/result/:id" 
+          element={<Layout><Result /></Layout>} 
+        />
+        <Route 
+          path="/history" 
+          element={<Layout><History /></Layout>} 
         />
       </Routes>
       <Footer />
-    </>
+    </BrowserRouter>
   );
 }
 

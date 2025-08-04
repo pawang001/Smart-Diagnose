@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import {useWindowSize} from '../../Hooks/UseWindowSize'; // Import the new hook
+import { UseWindowSize } from '../Layout/UseWindowSize'; // Corrected casing
+import Sidebar from './../Sidebar/Sidebar';
 import './Layout.css';
-import Sidebar from '../Sidebar/Sidebar';
 
+// A reusable Icon component
 const Icon = ({ path, className = '' }) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`icon ${className}`}>
       <path strokeLinecap="round" strokeLinejoin="round" d={path} />
     </svg>
 );
 
-const Layout = ({ children }) => {
-  const { width } = useWindowSize(); // Use our custom hook
+const Layout = ({ children, diseases, activeDisease, onDiseaseSelect }) => {
+  const { width } = UseWindowSize();
   const isMobile = width < 768;
 
-  // State for desktop sidebar pinning
   const [isSidebarPinned, setIsSidebarPinned] = useState(false);
-  // State for desktop sidebar hover
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
-  // State specifically for the mobile menu overlay
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Determine if the sidebar should be visually expanded
@@ -33,14 +31,14 @@ const Layout = ({ children }) => {
 
   return (
     <div className="app-layout">
-      {/* Mobile-only menu button, now correctly rendered */}
+      {/* This button is ONLY visible on mobile and controls the overlay menu */}
       {isMobile && (
         <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
           <Icon path="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </button>
       )}
 
-      {/* Backdrop for mobile overlay */}
+      {/* The dark backdrop for the mobile menu */}
       {isMobile && isMobileMenuOpen && (
         <div className="sidebar-backdrop" onClick={toggleMobileMenu}></div>
       )}
@@ -53,8 +51,14 @@ const Layout = ({ children }) => {
         <Sidebar
           isOpen={isSidebarOpen}
           isPinned={isSidebarPinned}
-          togglePin={toggleDesktopPin}
-          onNavItemClick={isMobile ? toggleMobileMenu : undefined} // Close menu on mobile after click
+          // On mobile, the pin button doesn't exist, so we pass the mobile toggle function.
+          // On desktop, we pass the pin function. This is a placeholder for the pin button inside the sidebar.
+          togglePin={isMobile ? toggleMobileMenu : toggleDesktopPin}
+          // This function closes the mobile menu when a nav item is clicked
+          onNavItemClick={isMobile ? () => setIsMobileMenuOpen(false) : undefined}
+          diseases={diseases}
+          activeDisease={activeDisease}
+          onDiseaseSelect={onDiseaseSelect}
         />
       </div>
 

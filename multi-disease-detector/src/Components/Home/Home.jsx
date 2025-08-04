@@ -1,8 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-// Custom Hook for scroll animations
+// --- FIX: Import the images directly ---
+import predictionPreview from '../../assets/prediction.png';
+import resultPreview from '../../assets/result.png';
+import historyPreview from '../../assets/history.png';
+
+// --- Reusable Components & Hooks ---
+
+// Custom Hook for fade-in scroll animations
 const useFadeInSection = () => {
     const domRef = useRef();
     useEffect(() => {
@@ -21,7 +28,7 @@ const useFadeInSection = () => {
     return domRef;
 };
 
-// Reusable Section component with animation
+// Animated Section Wrapper
 const AnimatedSection = ({ children, className = '', id = '' }) => {
     const domRef = useFadeInSection();
     return (
@@ -31,7 +38,7 @@ const AnimatedSection = ({ children, className = '', id = '' }) => {
     );
 };
 
-// Reusable Icon component
+// Feature Card Icon
 const FeatureIcon = ({ path }) => (
     <div className="feature-icon-wrapper">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="feature-icon">
@@ -40,16 +47,51 @@ const FeatureIcon = ({ path }) => (
     </div>
 );
 
+// FAQ Item with accordion logic
+const FaqItem = ({ question, answer }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <div className="faq-item">
+            <button className="faq-question" onClick={() => setIsOpen(!isOpen)}>
+                <span>{question}</span>
+                <span className={`faq-icon ${isOpen ? 'open' : ''}`}>+</span>
+            </button>
+            <div className={`faq-answer ${isOpen ? 'open' : ''}`}>
+                <p>{answer}</p>
+            </div>
+        </div>
+    );
+};
+
+// --- Main Home Component ---
+
 const Home = () => {
     const navigate = useNavigate();
     const handleGetStarted = () => navigate('/predict');
 
-    // Function to handle smooth scrolling
+    const [activePreview, setActivePreview] = useState('form');
+
     const handleNavClick = (e, targetId) => {
         e.preventDefault();
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+    
+    // --- FIX: Use the imported image variables ---
+    const previewData = {
+        form: {
+            title: "Intuitive Data Entry",
+            image: predictionPreview 
+        },
+        result: {
+            title: "Clear & Detailed Results",
+            image: resultPreview
+        },
+        history: {
+            title: "Track Your History",
+            image: historyPreview
         }
     };
 
@@ -60,7 +102,7 @@ const Home = () => {
                 <div className="nav-links">
                     <a href="#features" onClick={(e) => handleNavClick(e, 'features')}>Features</a>
                     <a href="#preview" onClick={(e) => handleNavClick(e, 'preview')}>Preview</a>
-                    <a href="#about" onClick={(e) => handleNavClick(e, 'about')}>About</a>
+                    <a href="#faq" onClick={(e) => handleNavClick(e, 'faq')}>FAQ</a>
                 </div>
             </nav>
 
@@ -103,31 +145,51 @@ const Home = () => {
                     </div>
                 </AnimatedSection>
 
-                <AnimatedSection id="preview" className="image-preview-section">
+                <AnimatedSection id="preview" className="preview-section">
                     <div className="section-header">
                         <h2 className="section-title">See It in Action</h2>
                         <p className="section-description">
                             Explore our clean, intuitive dashboard. All the information you need, presented clearly.
                         </p>
                     </div>
-                    <div className="image-container">
-                        <img 
-                            src="src\assets\preview.png" 
-                            alt="Smart Diagnose App Preview" 
-                            className="preview-image"
-                        />
+                    <div className="preview-tabs">
+                        <button className={`tab-button ${activePreview === 'form' ? 'active' : ''}`} onClick={() => setActivePreview('form')}>Input Form</button>
+                        <button className={`tab-button ${activePreview === 'result' ? 'active' : ''}`} onClick={() => setActivePreview('result')}>Detailed Result</button>
+                        <button className={`tab-button ${activePreview === 'history' ? 'active' : ''}`} onClick={() => setActivePreview('history')}>Track History</button>
+                    </div>
+                    <div className="preview-content">
+                        {Object.keys(previewData).map(key => (
+                             <img 
+                                key={key}
+                                src={previewData[key].image}
+                                alt={`${previewData[key].title} Preview`}
+                                className={`preview-image ${activePreview === key ? 'active' : ''}`}
+                            />
+                        ))}
                     </div>
                 </AnimatedSection>
 
-                <AnimatedSection id="about">
-                    <div className="about-content">
-                        <h2 className="section-title">About The Project</h2>
-                        <p>
-                            Smart Diagnose is a demonstration of how modern web technologies and machine learning can be combined to create powerful, accessible health-tech tools. The application hosts multiple prediction models, each trained on a standard dataset for a specific condition.
-                        </p>
-                        <p>
-                            <strong>Disclaimer:</strong> This tool is for educational and informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.
-                        </p>
+                <AnimatedSection id="faq">
+                    <div className="section-header">
+                        <h2 className="section-title">Frequently Asked Questions</h2>
+                    </div>
+                    <div className="faq-accordion">
+                        <FaqItem
+                            question="How accurate are the predictions?"
+                            answer="The models are trained on standard, publicly available datasets and achieve high accuracy on validation data. However, they are for informational purposes only and do not replace a professional medical diagnosis."
+                        />
+                        <FaqItem
+                            question="Is my data safe?"
+                            answer="Absolutely. We prioritize your privacy. The data you enter is processed for prediction and is never stored on our servers. All prediction history is saved locally in your own browser, giving you full control."
+                        />
+                        <FaqItem
+                            question="What should I do with the prediction result?"
+                            answer="A prediction from Smart Diagnose is not a medical diagnosis. You should always consult with a qualified healthcare professional to interpret the results and discuss appropriate next steps for your health."
+                        />
+                         <FaqItem
+                            question="Which diseases can this tool predict?"
+                            answer="Currently, the platform supports models for Breast Cancer, Heart Disease, Diabetes, and Kidney Disease. We are continuously working to validate and add new models for other conditions."
+                        />
                     </div>
                 </AnimatedSection>
             </main>
