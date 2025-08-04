@@ -38,7 +38,7 @@ const Prediction = () => {
         'concave points_worst', 'perimeter_worst', 'concave points_mean',
         'radius_worst', 'perimeter_mean', 'area_worst', 'radius_mean',
     ];
-    const apiEndpoint = 'http://127.0.0.1:5001/predict'; // Use your actual endpoint
+    const apiEndpoint = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5001/predict';
 
     const initialState = modelFeatures.reduce((acc, feature) => ({ ...acc, [feature]: '' }), {});
     

@@ -59,4 +59,4 @@ def predict():
 # This allows you to run the app directly
 if __name__ == '__main__':
     # Use port 5001 to avoid conflicts with the React frontend later
-    app.run(debug=True, port=5001)
+    app.run(debug=False, port=5001)
