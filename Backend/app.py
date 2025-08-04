@@ -10,7 +10,7 @@ app = Flask(__name__)
 # --- Configure CORS for Production ---
 # This is a critical security step. It tells your backend to ONLY accept API requests
 # from your deployed Vercel frontend and your local development server.
-CORS(app, resources={r"/predict": {"origins": ["https://smart-diagnose.vercel.app", "http://localhost:5173"]}})
+CORS(app, origins=["https://smart-diagnose.vercel.app", "http://localhost:5173"])
 
 
 # --- Load All Models at Startup ---

@@ -154,7 +154,6 @@ const Prediction = () => {
                     </div>
                 </div>
             </Layout>
-            <Footer />
         </>
     );
 };
