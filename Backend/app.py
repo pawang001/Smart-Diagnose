@@ -6,7 +6,11 @@ import numpy as np
 
 # Initialize the Flask app 
 app = Flask(__name__) 
-CORS(app) # Enable CORS for all routes 
+cors = CORS(app, resources={
+    r"/predict": {
+        "origins": "https://smart-diagnose.vercel.app"
+    }
+}) 
 
 try: 
     model = joblib.load('disease_predictor.joblib') 
