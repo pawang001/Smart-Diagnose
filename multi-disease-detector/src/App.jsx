@@ -12,8 +12,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* UPDATED: Dynamic route for prediction */}
         <Route 
-          path="/predict" 
+          path="/predict/:diseaseId" 
           element={<Layout><Prediction /></Layout>} 
         />
         <Route 

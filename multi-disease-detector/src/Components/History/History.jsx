@@ -46,6 +46,13 @@ const History = () => {
         <>
             {isModalOpen && <ConfirmationModal onConfirm={confirmClearHistory} onCancel={() => setIsModalOpen(false)} />}
             <div className="history-page-container">
+                {/* Animated background */}
+                <div className="aurora-bg">
+                    <div className="aurora-bg__c1"></div>
+                    <div className="aurora-bg__c2"></div>
+                    <div className="aurora-bg__c3"></div>
+                </div>
+
                 <div className="history-card">
                     <div className="history-card-header">
                         <h2>Prediction History</h2>
@@ -59,7 +66,7 @@ const History = () => {
                     <div className="history-list">
                         {history.length > 0 ? (
                             history.map((record, index) => (
-                                <Link to={`/result/${record.id}`} key={record.id} className="history-item-link" style={{ animationDelay: `${index * 50}ms` }}>
+                                <Link to={`/result/${record.id}`} key={record.id} className="history-item-link" style={{ animationDelay: `${index * 70}ms` }}>
                                     <div className="history-item">
                                         <div className="item-main-info">
                                             <span className={`item-status-dot ${record.result.prediction === 1 ? 'positive' : 'negative'}`}></span>
@@ -82,7 +89,7 @@ const History = () => {
                                 <Icon path="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" className="no-history-icon" />
                                 <h3>No History Found</h3>
                                 <p>It looks like you haven't made any predictions yet.</p>
-                                <Link to="/predict" className="action-button">Make a Prediction</Link>
+                                <Link to="/predict/breast-cancer" className="action-button">Make a Prediction</Link>
                             </div>
                         )}
                     </div>

@@ -1,153 +1,287 @@
+/* --- Page Container & Animated Aurora Background --- */
 .prediction-page-container {
-    width: 100%;
-    min-height: calc(100vh - 80px); /* Adjust based on your header height */
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  min-height: calc(100vh - 80px); /* Adjust based on your header height */
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background);
+  overflow: hidden; /* Important for the aurora effect */
+  position: relative;
 }
 
+.aurora-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.aurora-bg__c1,
+.aurora-bg__c2,
+.aurora-bg__c3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px); /* The core of the blur effect */
+  opacity: 0.4;
+}
+
+.aurora-bg__c1 {
+  width: 400px;
+  height: 400px;
+  background-color: rgba(139, 92, 246, 0.5); /* Primary color */
+  top: 10%;
+  left: 15%;
+  animation: move1 15s infinite alternate;
+}
+
+.aurora-bg__c2 {
+  width: 350px;
+  height: 350px;
+  background-color: rgba(245, 158, 11, 0.5); /* Secondary color */
+  top: 50%;
+  left: 60%;
+  animation: move2 18s infinite alternate;
+}
+
+.aurora-bg__c3 {
+    width: 300px;
+    height: 300px;
+    background-color: rgba(99, 102, 241, 0.4); /* Another cool color */
+    top: 70%;
+    left: 20%;
+    animation: move3 20s infinite alternate;
+}
+
+@keyframes move1 {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(100px, 50px) rotate(45deg); }
+}
+@keyframes move2 {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(-80px, 60px) rotate(-60deg); }
+}
+@keyframes move3 {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(50px, -50px) rotate(30deg); }
+}
+
+
+/* --- Glassmorphism Prediction Card --- */
 .prediction-card {
-    width: 100%;
-    max-width: 850px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 850px;
+  position: relative; /* To sit above the aurora background */
+  z-index: 1;
+  
+  /* The Glassmorphism Effect */
+  background: rgba(22, 27, 34, 0.6); /* --color-surface with alpha */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(48, 54, 61, 0.5); /* --color-border with alpha */
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Card Header & Content --- */
 .prediction-card-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .prediction-card-header h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-    color: var(--color-text-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.prediction-description {
+  color: var(--color-text-secondary);
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .section-icon {
-    width: 28px;
-    height: 28px;
-    color: var(--color-primary);
+  width: 28px;
+  height: 28px;
+  color: var(--color-primary);
+  transition: transform 0.4s ease;
 }
 
-.prediction-form {
-    display: flex;
-    flex-direction: column;
+.prediction-card-header:hover .section-icon {
+  transform: rotate(10deg) scale(1.1);
 }
 
+/* --- Form Grid & Staggered Animation --- */
 .form-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Single column on mobile */
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
+.form-field-animation {
+    /* Initial state for animation */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideUpFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Input Groups & Interactive Fields --- */
 .input-group {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .input-group label {
-    text-transform: capitalize;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
+  text-transform: capitalize;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
 }
 
-.input-group input {
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: 0.875rem;
-    color: var(--color-text-primary);
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+.input-group input,
+.input-group select {
+  background-color: rgba(13, 17, 23, 0.8); /* Darker than card for depth */
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 0.875rem;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.input-group input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+.input-group select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23848d97' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
 }
 
+.input-group input:focus,
+.input-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); /* Glow effect */
+}
+
+/* --- Errors & Button --- */
 .input-error {
-    border-color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
 }
 
 .error-message {
-    color: var(--color-danger);
-    font-size: 0.8rem;
-    margin-top: 0.3rem;
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
 }
 
 .api-error-box {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: var(--color-danger);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    text-align: center;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--color-danger);
+  background-color: rgba(244, 63, 94, 0.1);
+  color: var(--color-danger);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(244, 63, 94, 0.2);
 }
 
 .predict-button {
-    padding: 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #FFFFFF;
-    background-image: linear-gradient(to right, #38bdf8, #4f46e5);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-image: linear-gradient(to right, var(--color-primary) 0%, var(--color-secondary) 100%);
+  background-size: 200% auto;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .predict-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  background-position: right center; /* Change the gradient direction */
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
 }
 
 .predict-button:disabled {
-    background-image: none;
-    background-color: var(--color-border);
-    cursor: not-allowed;
-    transform: translateY(0);
-    box-shadow: none;
+  background-image: none;
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
 }
+
+/* --- Spinner for Loading Button --- */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 /* --- Media Queries for Responsiveness --- */
-
-/* For tablets and larger screens */
 @media (min-width: 768px) {
-    .prediction-page-container {
-        padding: 2rem;
-    }
-
-    .prediction-card {
-        padding: 2rem;
-    }
-
-    .form-grid {
-        /* Two columns on tablets */
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .prediction-card {
+    padding: 2rem;
+  }
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* For large desktops */
 @media (min-width: 1024px) {
-    .form-grid {
-        /* Three columns on large screens for a more compact look */
-        grid-template-columns: repeat(3, 1fr);
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+    .prediction-page-container {
+        padding: 0.5rem;
+        align-items: flex-start; /* Allow scrolling on mobile */
+        padding-top: 2rem;
+    }
+    .prediction-card {
+        padding: 1rem;
     }
 }
