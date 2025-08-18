@@ -1,166 +1,186 @@
+/* --- Base Sidebar Styles --- */
 .sidebar {
-    width: 80px;
-    height: 100%;
-    background-color: var(--color-surface); /* Themed */
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-x: hidden;
-    border-right: 1px solid var(--color-border); /* Themed */
+  width: 80px;
+  height: 100vh;
+  background-color: var(--color-surface);
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+  border-right: 1px solid var(--color-border);
+  box-shadow: 2px 0 16px 0 rgba(0, 0, 0, 0.08);
 }
 
 .sidebar.open {
-    width: 260px;
-    align-items: flex-start;
+  width: 260px;
+}
+
+.sidebar:not(.open) .sidebar-logo {
+  display: none;
 }
 
 .sidebar-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;   
+  padding: 0 0.5rem;
+  flex-shrink: 0;
+  min-height: 56px; 
+  justify-content: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .sidebar.open .sidebar-header {
-    justify-content: flex-end;
+  flex-direction: row; 
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  padding-bottom: 1rem;
+}
+
+.sidebar-logo-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar.open .sidebar-logo-text {
+  opacity: 1;
+  transition-delay: 0.1s;
 }
 
 .pin-toggle {
-    background: transparent;
-    border: none;
-    color: var(--color-text-secondary); /* Themed */
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: var(--border-radius); /* Themed */
-    transition: background-color 0.2s, color 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  flex-shrink: 0;
 }
 
 .pin-toggle:hover {
-    background-color: var(--color-border); /* Themed */
-    color: var(--color-text-primary); /* Themed */
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .pin-toggle .icon {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
+/* --- Navigation Section --- */
 .sidebar-nav {
-    width: 100%;
-    flex-grow: 1;
+  width: 100%;
+  flex-grow: 1;
+  padding: 0 0.75rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar-nav .nav-links-bottom {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .nav-item .nav-link {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    text-decoration: none;
-    color: var(--color-text-secondary); /* Themed */
-    border-radius: var(--border-radius); /* Themed */
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    white-space: nowrap;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .nav-item.active .nav-link {
-    background-color: var(--color-primary); /* Themed */
-    color: white;
-    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.25); /* Themed */
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
 }
 
 .nav-item:not(.active) .nav-link:hover {
-    background-color: var(--color-border); /* Themed */
-    color: var(--color-text-primary); /* Themed */
+  background-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .nav-icon {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    margin-right: 1rem;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-right: 0;
+  transition: margin-right 0.3s ease;
 }
 
-.sidebar:not(.open) .nav-icon {
-    margin-right: 0;
+.sidebar.open .nav-icon {
+  margin-right: 1rem;
 }
 
 .nav-text {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+  font-weight: 500;
 }
 
 .sidebar.open .nav-text {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s ease 0.1s, visibility 0s linear 0.1s;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 767px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar .sidebar-header {
+    flex-direction: row;
+    justify-content: center;
+    padding: 1rem 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .sidebar .sidebar-logo-text,
+  .sidebar .nav-text {
     opacity: 1;
     visibility: visible;
-    transition-delay: 0.1s;
-}
+    transition: none;
+    text-align: left;
+  }
 
-.sidebar-footer {
-    width: 100%;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-border); /* Themed */
-    flex-shrink: 0;
-}
-
-/* --- Media Queries for Responsiveness --- */
-
-@media (min-width: 768px) {
-    .prediction-page-container {
-        padding: 2rem;
-    }
-    .prediction-card {
-        padding: 2rem;
-    }
-    .form-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .form-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 767px) {
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        width: 260px;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-        box-shadow: 5px 0px 15px rgba(0,0,0,0.2);
-    }
-
-    .sidebar .nav-text {
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .sidebar .nav-icon {
-        margin-right: 1rem;
-    }
-    
-    .sidebar .sidebar-header {
-        justify-content: flex-end;
-    }
+  .sidebar .nav-icon {
+    margin-right: 1rem;
+  }
+  
+  .pin-toggle {
+    display: none;
+  }
 }
