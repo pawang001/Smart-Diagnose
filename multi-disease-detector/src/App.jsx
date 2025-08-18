@@ -5,7 +5,7 @@ import Layout from "./Components/Layout/Layout";
 import Prediction from "./Components/PredictionForm/Prediction";
 import Result from "./Components/Result/Result";
 import History from "./Components/History/History";
-import Home from "./components/Home/Home";
+import Home from "./Components/Home/Home";
 
 function App() {
   return (
