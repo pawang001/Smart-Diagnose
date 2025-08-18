@@ -1,21 +1,58 @@
+/* --- Page Container & Animated Aurora Background --- */
 .history-page-container {
     width: 100%;
-    min-height: calc(100vh - 80px); /* Adjust based on header height */
+    min-height: calc(100vh - 80px); /* Adjust based on your header height */
     padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background-color: var(--color-background);
     color: var(--color-text-primary);
+    overflow: hidden;
+    position: relative;
 }
 
+.aurora-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.aurora-bg__c1, .aurora-bg__c2, .aurora-bg__c3 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.3;
+}
+
+.aurora-bg__c1 { width: 450px; height: 450px; background-color: var(--color-primary); top: 5%; left: 10%; animation: move1 15s infinite alternate; }
+.aurora-bg__c2 { width: 400px; height: 400px; background-color: var(--color-secondary); top: 60%; left: 55%; animation: move2 18s infinite alternate; }
+.aurora-bg__c3 { width: 350px; height: 350px; background-color: #3b82f6; top: 40%; left: 30%; animation: move3 20s infinite alternate; }
+
+@keyframes move1 { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(100px, 50px) rotate(45deg); } }
+@keyframes move2 { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(-80px, 60px) rotate(-60deg); } }
+@keyframes move3 { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(50px, -50px) rotate(30deg); } }
+
+
+/* --- Glassmorphism History Card --- */
 .history-card {
     width: 100%;
     max-width: 900px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    position: relative;
+    z-index: 1;
+    margin-top: 2rem;
+    
+    background: rgba(22, 27, 34, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(48, 54, 61, 0.5);
     border-radius: var(--border-radius);
     padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .history-card-header {
@@ -40,7 +77,7 @@
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -51,12 +88,15 @@
     background-color: var(--color-danger);
     color: white;
     border-color: var(--color-danger);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.2);
 }
 .clear-button .icon {
     width: 16px;
     height: 16px;
 }
 
+/* --- History List & Items --- */
 .history-list {
     display: flex;
     flex-direction: column;
@@ -72,25 +112,25 @@
 }
 
 @keyframes fadeInSlideUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .history-item {
-    background-color: var(--color-background);
+    background-color: rgba(13, 17, 23, 0.7);
     padding: 1rem 1.5rem;
     border-radius: var(--border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--color-background);
-    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--color-border);
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .history-item-link:hover .history-item {
     border-color: var(--color-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .item-main-info {
@@ -104,9 +144,10 @@
     height: 12px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 0 8px, 0 0 12px;
 }
-.item-status-dot.negative { background-color: var(--color-secondary); }
-.item-status-dot.positive { background-color: var(--color-danger); }
+.item-status-dot.negative { background-color: var(--color-secondary); color: var(--color-secondary); }
+.item-status-dot.positive { background-color: var(--color-danger); color: var(--color-danger); }
 
 .item-details {
     display: flex;
@@ -133,6 +174,8 @@
 .item-result {
     font-weight: 700;
     font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .item-result.negative { color: var(--color-secondary); }
@@ -142,22 +185,28 @@
     width: 20px;
     height: 20px;
     color: var(--color-text-secondary);
-    transition: color 0.2s;
+    transition: color 0.2s, transform 0.3s;
 }
 .history-item-link:hover .item-arrow-icon {
     color: var(--color-primary);
+    transform: translateX(4px);
 }
 
+/* --- No History State --- */
 .no-history-container {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--color-text-secondary);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--border-radius);
+    margin-top: 1rem;
 }
 .no-history-icon {
     width: 48px;
     height: 48px;
     color: var(--color-primary);
     margin-bottom: 1.5rem;
+    opacity: 0.7;
 }
 .no-history-container h3 {
     margin: 0 0 0.5rem 0;
@@ -170,7 +219,18 @@
 .no-history-container .action-button {
     padding: 0.8rem 1.5rem;
     font-weight: 600;
+    color: white;
+    background-color: var(--color-primary);
+    border: none;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
 }
+.no-history-container .action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.2);
+}
+
 
 /* --- Confirmation Modal --- */
 .modal-backdrop {
@@ -179,7 +239,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(13, 17, 23, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,7 +247,10 @@
     animation: fadeIn 0.3s ease;
 }
 .modal-card {
-    background-color: var(--color-surface);
+    background: rgba(22, 27, 34, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(48, 54, 61, 0.7);
     padding: 2rem;
     border-radius: var(--border-radius);
     width: 90%;
@@ -215,21 +278,22 @@
     border: none;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 .modal-button.secondary {
     background-color: var(--color-border);
     color: var(--color-text-primary);
 }
 .modal-button.secondary:hover {
-    background-color: var(--color-text-secondary);
+    background-color: #4b5563; /* A slightly lighter grey */
 }
 .modal-button.danger {
     background-color: var(--color-danger);
     color: white;
 }
 .modal-button.danger:hover {
-    opacity: 0.85;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
 }
 
 /* --- Media Queries --- */

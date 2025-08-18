@@ -1,85 +1,131 @@
-# train_model.py
-
+# ==============================================================================
+#  1. IMPORT NECESSARY LIBRARIES
+# ==============================================================================
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 import joblib
+import numpy as np
 
-print("Script started: Training a user-friendly model...")
+# ==============================================================================
+#  2. DEFINE THE CORE MODEL TRAINING FUNCTION
+# ==============================================================================
+def train_and_save_model(data_file, target_column, model_prefix, top_n_features=8, columns_to_drop=None, map_target=None):
+    """
+    Loads a dataset, preprocesses the data, trains a machine learning model,
+    and saves the model and its required feature columns to disk.
 
-# --- Configuration ---
-# You can change this number to select more or fewer features.
-# Let's start with the top 7 most important ones.
-TOP_N_FEATURES = 7
-DATA_FILE = 'breast_cancer_data.csv'
-TARGET_COLUMN = 'diagnosis' # IMPORTANT: Change this to your dataset's target column name (e.g., 'outcome', 'target')
+    This function is designed to be reusable for different diseases and datasets.
+    It automatically handles text-based (categorical) features.
 
-# --- 1. Load the Data ---
-try:
-    df = pd.read_csv(DATA_FILE)
-except FileNotFoundError:
-    print(f"Error: The data file '{DATA_FILE}' was not found in the backend folder.")
-    exit()
+    Args:
+        data_file (str): The path to the CSV data file.
+        target_column (str): The name of the column to be predicted.
+        model_prefix (str): A unique name used for saving model files (e.g., 'breast_cancer').
+        top_n_features (int): The number of most important features to use for training.
+        columns_to_drop (list, optional): A list of columns to remove from the data.
+        map_target (dict, optional): A dictionary to map string labels to numbers (e.g., {'M': 1, 'B': 0}).
+    """
+    print(f"\n--- Training Model for: {model_prefix.replace('_', ' ').title()} ---")
 
-# Handle potential non-numeric or missing data if necessary
-# For this dataset, we'll assume the columns are mostly numeric.
-# The 'id' column is usually not useful for prediction.
-if 'id' in df.columns:
-    df = df.drop('id', axis=1)
+    # --- Step 2a: Load Data ---
+    try:
+        df = pd.read_csv(data_file)
+    except FileNotFoundError:
+        print(f"ERROR: Data file '{data_file}' not found. Skipping this model.")
+        return
 
-# Some datasets use 'M' for Malignant and 'B' for Benign.
-# Our model needs numbers (0 or 1), so we convert them.
-if df[TARGET_COLUMN].dtype == 'object':
-    df[TARGET_COLUMN] = df[TARGET_COLUMN].map({'M': 1, 'B': 0})
+    # --- Step 2b: Preprocess Data ---
+    # Drop any specified non-feature columns like 'id' or 'dataset'.
+    if columns_to_drop:
+        df = df.drop(columns=columns_to_drop, errors='ignore')
 
+    # If a mapping is provided, convert text-based target labels to numbers.
+    if map_target and df[target_column].dtype == 'object':
+        df[target_column] = df[target_column].map(map_target)
 
-# --- 2. Find the Most Important Features ---
-print("Finding the most important features...")
+    # Remove any rows where the target value is missing.
+    df.dropna(subset=[target_column], inplace=True)
+    
+    # Ensure the target column is of integer type.
+    df[target_column] = df[target_column].astype(int)
+    
+    # For some datasets, the target might have multiple positive values (e.g., 1, 2, 3, 4).
+    # We convert this into a simple binary problem: 0 for negative, 1 for positive.
+    if model_prefix == 'heart_disease':
+        df[target_column] = df[target_column].apply(lambda x: 1 if x > 0 else 0)
 
-X = df.drop(TARGET_COLUMN, axis=1)
-y = df[TARGET_COLUMN]
+    # Separate the data into features (X) and the target variable (y).
+    X = df.drop(target_column, axis=1)
+    y = df[target_column]
 
-# We use a RandomForestClassifier to determine feature importance.
-# It's excellent for this kind of analysis.
-feature_selector = RandomForestClassifier(n_estimators=100, random_state=42)
-feature_selector.fit(X, y)
+    # Convert all text-based feature columns into numerical format using one-hot encoding.
+    # This is a critical step for machine learning models to work.
+    X = pd.get_dummies(X, drop_first=True)
+    
+    # Fill any remaining missing feature values with the median of their respective column.
+    X.fillna(X.median(), inplace=True)
 
-# Create a series with feature names and their importance scores
-importances = pd.Series(feature_selector.feature_importances_, index=X.columns)
+    # --- Step 2c: Select the Most Important Features ---
+    # We use a preliminary RandomForest model to evaluate which features are most predictive.
+    feature_selector = RandomForestClassifier(n_estimators=100, random_state=42)
+    feature_selector.fit(X, y)
+    importances = pd.Series(feature_selector.feature_importances_, index=X.columns)
+    
+    # Ensure we don't try to select more features than are available.
+    num_available_features = len(X.columns)
+    actual_top_n = min(top_n_features, num_available_features)
+    
+    # Get the names of the top N most important features.
+    top_features = importances.nlargest(actual_top_n)
+    top_feature_names = list(top_features.index)
 
-# Select the top N features
-top_features = importances.nlargest(TOP_N_FEATURES)
-top_feature_names = list(top_features.index)
+    print(f"Selected Top {actual_top_n} features:")
+    print(top_features)
 
-print(f"\nSelected the Top {TOP_N_FEATURES} most important features:")
-print(top_features)
-print("\nWe will build our model using only these features.")
+    # --- Step 2d: Train the Final Model ---
+    # Create a new DataFrame containing only the most important features.
+    X_top_features = X[top_feature_names]
+    
+    # Train the final model using only this refined set of features.
+    final_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    final_model.fit(X_top_features, y)
 
+    # --- Step 2e: Save the Model and Columns ---
+    # Save the trained model object to a file.
+    joblib.dump(final_model, f'{model_prefix}_model.joblib')
+    
+    # CRITICAL: Save the list of feature columns that the final model was trained on.
+    # The API will use this to ensure incoming data has the correct format.
+    joblib.dump(top_feature_names, f'{model_prefix}_columns.joblib')
 
-# --- 3. Train a New Model with Only the Top Features ---
-print("\nTraining a new model using only the selected features...")
+    print(f"Model '{model_prefix}' saved successfully!")
+    print("----------------------------------------------------")
 
-# Create a new DataFrame with only the most important features
-X_top_features = X[top_feature_names]
+# ==============================================================================
+#  3. EXECUTE THE TRAINING PROCESS
+# ==============================================================================
+# This block runs only when the script is executed directly (`python train_model.py`).
+if __name__ == '__main__':
+    # --- Train Breast Cancer Model ---
+    train_and_save_model(
+        data_file='breast_cancer_data.csv',
+        target_column='diagnosis',
+        model_prefix='breast_cancer',
+        columns_to_drop=['id'],
+        map_target={'M': 1, 'B': 0}
+    )
 
-# We can use the same model (or a different one) for the final prediction
-# Let's stick with RandomForest as it's powerful.
-final_model = RandomForestClassifier(n_estimators=100, random_state=42)
-final_model.fit(X_top_features, y)
+    # --- Train Heart Disease Model ---
+    train_and_save_model(
+        data_file='heart_disease_data.csv',
+        target_column='num',
+        model_prefix='heart_disease',
+        columns_to_drop=['id', 'dataset']
+    )
 
-
-# --- 4. Save the New Model and its Columns ---
-print("\nSaving the new model and its column list...")
-
-# Save the trained model
-joblib.dump(final_model, 'disease_predictor.joblib')
-
-# CRITICAL: Save the list of the columns we actually used for the final model
-joblib.dump(top_feature_names, 'model_columns.joblib')
-
-print("\n----------------------------------------------------")
-print("✅ New user-friendly model trained and saved successfully!")
-print("The API will now only require these fields:")
-for name in top_feature_names:
-    print(f"- {name}")
-print("----------------------------------------------------")
+    # --- Train Diabetes Model ---
+    train_and_save_model(
+        data_file='diabetes_data.csv',
+        target_column='Outcome',
+        model_prefix='diabetes'
+    )

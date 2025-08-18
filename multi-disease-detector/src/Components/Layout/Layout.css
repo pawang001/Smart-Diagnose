@@ -7,20 +7,20 @@
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 100;
+  z-index: 1010; 
 }
 
 /* --- Mobile-only menu toggle button --- */
 .mobile-menu-toggle {
-  display: none; /* Hidden by default on desktop */
+  display: none;
   position: fixed;
   top: 1rem;
   left: 1rem;
-  z-index: 1100; /* Above everything else */
+  z-index: 1100;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
-  border-radius: var(--border-radius);
+  border-radius: 6px;
   width: 44px;
   height: 44px;
   align-items: center;
@@ -57,7 +57,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 1000;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -69,14 +69,17 @@
 /* --- Media query to activate mobile styles --- */
 @media (max-width: 767px) {
   .mobile-menu-toggle {
-    display: flex; /* Show the button on mobile */
+    display: flex;
   }
   .page-content {
-    margin-left: 0; /* No margin on mobile */
+    margin-left: 0;
     width: 100%;
   }
-  /* On mobile, the desktop hover functionality is disabled */
   .sidebar-wrapper {
-      pointer-events: none;
+    pointer-events: none; /* Allows clicks to go "through" to the menu button */
+  }
+  /* When the sidebar is open on mobile, it should be interactive */
+  .sidebar-wrapper .sidebar.open {
+    pointer-events: auto;
   }
 }

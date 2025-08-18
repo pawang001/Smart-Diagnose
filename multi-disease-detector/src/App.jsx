@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Home from "./Components/Home/Home";
 import Footer from "./Components/Footer/Footer";
 import Layout from "./Components/Layout/Layout";
 import Prediction from "./Components/PredictionForm/Prediction";
 import Result from "./Components/Result/Result";
 import History from "./Components/History/History";
+import Home from "./components/Home/Home";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route 
-          path="/predict" 
+          path="/predict/:diseaseId" 
           element={<Layout><Prediction /></Layout>} 
         />
         <Route 
