@@ -1,88 +1,37 @@
-/* --- Page Container & Animated Aurora Background --- */
 .prediction-page-container {
   width: 100%;
-  min-height: calc(100vh - 80px); /* Adjust based on your header height */
+  min-height: calc(100vh - 80px);
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-background);
-  overflow: hidden; /* Important for the aurora effect */
+  overflow: hidden;
   position: relative;
 }
 
-.aurora-bg {
+.prediction-page-container::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(56, 189, 248, 0.1),
+    transparent 70%
+  );
   z-index: 0;
 }
 
-.aurora-bg__c1,
-.aurora-bg__c2,
-.aurora-bg__c3 {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px); /* The core of the blur effect */
-  opacity: 0.4;
-}
-
-.aurora-bg__c1 {
-  width: 400px;
-  height: 400px;
-  background-color: rgba(139, 92, 246, 0.5); /* Primary color */
-  top: 10%;
-  left: 15%;
-  animation: move1 15s infinite alternate;
-}
-
-.aurora-bg__c2 {
-  width: 350px;
-  height: 350px;
-  background-color: rgba(245, 158, 11, 0.5); /* Secondary color */
-  top: 50%;
-  left: 60%;
-  animation: move2 18s infinite alternate;
-}
-
-.aurora-bg__c3 {
-    width: 300px;
-    height: 300px;
-    background-color: rgba(99, 102, 241, 0.4); /* Another cool color */
-    top: 70%;
-    left: 20%;
-    animation: move3 20s infinite alternate;
-}
-
-@keyframes move1 {
-  from { transform: translate(0, 0) rotate(0deg); }
-  to { transform: translate(100px, 50px) rotate(45deg); }
-}
-@keyframes move2 {
-  from { transform: translate(0, 0) rotate(0deg); }
-  to { transform: translate(-80px, 60px) rotate(-60deg); }
-}
-@keyframes move3 {
-    from { transform: translate(0, 0) rotate(0deg); }
-    to { transform: translate(50px, -50px) rotate(30deg); }
-}
-
-
-/* --- Glassmorphism Prediction Card --- */
 .prediction-card {
   width: 100%;
   max-width: 850px;
-  position: relative; /* To sit above the aurora background */
+  position: relative;
   z-index: 1;
-  
-  /* The Glassmorphism Effect */
-  background: rgba(22, 27, 34, 0.6); /* --color-surface with alpha */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  border: 1px solid rgba(48, 54, 61, 0.5); /* --color-border with alpha */
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid rgba(48, 54, 61, 0.5);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -133,17 +82,16 @@
 }
 
 .form-field-animation {
-    /* Initial state for animation */
-    opacity: 0;
-    transform: translateY(20px);
-    animation: slideUpFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUpFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes slideUpFadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- Input Groups & Interactive Fields --- */
@@ -175,11 +123,11 @@
 }
 
 .input-group select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23848d97' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23848d97' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
 }
 
 .input-group input:focus,
@@ -219,8 +167,12 @@
   padding: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #FFFFFF;
-  background-image: linear-gradient(to right, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: #ffffff;
+  background-image: linear-gradient(
+    to right,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
   background-size: 200% auto;
   border: none;
   border-radius: var(--border-radius);
@@ -244,20 +196,19 @@
 
 /* --- Spinner for Loading Button --- */
 .spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
-
 
 /* --- Media Queries for Responsiveness --- */
 @media (min-width: 768px) {
@@ -276,12 +227,15 @@
 }
 
 @media (max-width: 767px) {
-    .prediction-page-container {
-        padding: 0.5rem;
-        align-items: flex-start; /* Allow scrolling on mobile */
-        padding-top: 2rem;
-    }
-    .prediction-card {
-        padding: 1rem;
-    }
+  .prediction-page-container {
+    padding: 0.5rem;
+    align-items: flex-start; /* Allow scrolling on mobile */
+    padding-top: 2rem;
+  }
+  .prediction-card-header h2 {
+    font-size: 1.4rem;
+  }
+  .prediction-card {
+    padding: 1rem;
+  }
 }

@@ -46,13 +46,7 @@ const History = () => {
         <>
             {isModalOpen && <ConfirmationModal onConfirm={confirmClearHistory} onCancel={() => setIsModalOpen(false)} />}
             <div className="history-page-container">
-                {/* Animated background */}
-                <div className="aurora-bg">
-                    <div className="aurora-bg__c1"></div>
-                    <div className="aurora-bg__c2"></div>
-                    <div className="aurora-bg__c3"></div>
-                </div>
-
+                {/* The aurora-bg div has been removed from here */}
                 <div className="history-card">
                     <div className="history-card-header">
                         <h2>Prediction History</h2>
@@ -72,7 +66,7 @@ const History = () => {
                                             <span className={`item-status-dot ${record.result.prediction === 1 ? 'positive' : 'negative'}`}></span>
                                             <div className="item-details">
                                                 <span className="item-disease">{record.disease}</span>
-                                                <span className="item-date">{new Date(record.date).toLocaleString()}</span>
+                                                <span className="item-date">{new Date(record.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                                             </div>
                                         </div>
                                         <div className="item-result-section">

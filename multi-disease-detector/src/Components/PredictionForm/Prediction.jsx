@@ -146,9 +146,12 @@ const Prediction = () => {
 
       const history =
         JSON.parse(localStorage.getItem("predictionHistory")) || [];
+      
+      // --- THE CHANGE IS HERE ---
+      // The .slice(0, 5) has been removed to keep all records.
       localStorage.setItem(
         "predictionHistory",
-        JSON.stringify([newRecord, ...history].slice(0, 5))
+        JSON.stringify([newRecord, ...history])
       );
 
       navigate(`/result/${newRecord.id}`);
@@ -170,12 +173,6 @@ const Prediction = () => {
 
   return (
     <div className="prediction-page-container">
-        {/* These are for the animated background */}
-        <div className="aurora-bg">
-            <div className="aurora-bg__c1"></div>
-            <div className="aurora-bg__c2"></div>
-            <div className="aurora-bg__c3"></div>
-        </div>
       <div className="prediction-card">
         <div className="prediction-card-header">
           <Icon path={modelConfig.iconPath} />
@@ -185,7 +182,6 @@ const Prediction = () => {
         <form onSubmit={handleSubmit} className="prediction-form" noValidate>
           <div className="form-grid">
             {modelConfig.features.map((feature, index) => {
-              // Applying a style for staggered animation
               const animationStyle = { animationDelay: `${index * 50}ms` };
 
               const commonProps = {
