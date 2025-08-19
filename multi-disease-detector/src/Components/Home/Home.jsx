@@ -110,7 +110,7 @@ const Home = () => {
   const [navOpen, setNavOpen] = useState(false);
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
-    setNavOpen(false);
+    setNavOpen(false); // Close nav on click
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -131,11 +131,11 @@ const Home = () => {
           </svg>
         </button>
         <div className={`nav-links ${navOpen ? "open" : ""}`}>
-          <a href="#features" onClick={(e) => handleNavClick(e, "features")}>
-            Features
-          </a>
           <a href="#preview" onClick={(e) => handleNavClick(e, "preview")}>
             Preview
+          </a>
+          <a href="#features" onClick={(e) => handleNavClick(e, "features")}>
+            Features
           </a>
           <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
             FAQ
@@ -164,6 +164,40 @@ const Home = () => {
       </header>
 
       <main>
+        <AnimatedSection id="preview" className="preview-section">
+            <div className="section-header">
+                <h2 className="section-title">See It in Action</h2>
+                <p className="section-description">
+                    Explore our clean, intuitive dashboard. All the information you need, presented clearly.
+                </p>
+            </div>
+            <div className="preview-tabs" role="tablist">
+                {previewData.map((item, idx) => (
+                    <button
+                        key={item.key}
+                        className={`tab-button ${activePreview === idx ? "active" : ""}`}
+                        onClick={() => setActivePreview(idx)}
+                        aria-selected={activePreview === idx}
+                        role="tab"
+                        tabIndex={activePreview === idx ? 0 : -1}
+                    >
+                        {item.label}
+                    </button>
+                ))}
+            </div>
+            <div className="preview-content">
+                {previewData.map((item, idx) => (
+                    <img
+                        key={item.key}
+                        src={item.image}
+                        alt={`${item.title} Preview`}
+                        className={`preview-image ${activePreview === idx ? "active" : ""}`}
+                        loading="lazy"
+                    />
+                ))}
+            </div>
+        </AnimatedSection>
+
         <AnimatedSection id="features">
           <div className="section-header">
             <h2 className="section-title">Why Choose Smart Diagnose?</h2>
@@ -193,40 +227,6 @@ const Home = () => {
                 Easily switch between different prediction models for various diseases.
               </p>
             </div>
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection id="preview" className="preview-section">
-          <div className="section-header">
-            <h2 className="section-title">See It in Action</h2>
-            <p className="section-description">
-              Explore our clean, intuitive dashboard. All the information you need, presented clearly.
-            </p>
-          </div>
-          <div className="preview-tabs" role="tablist">
-            {previewData.map((item, idx) => (
-              <button
-                key={item.key}
-                className={`tab-button ${activePreview === idx ? "active" : ""}`}
-                onClick={() => setActivePreview(idx)}
-                aria-selected={activePreview === idx}
-                role="tab"
-                tabIndex={activePreview === idx ? 0 : -1}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-          <div className="preview-content">
-            {previewData.map((item, idx) => (
-              <img
-                key={item.key}
-                src={item.image}
-                alt={`${item.title} Preview`}
-                className={`preview-image ${activePreview === idx ? "active" : ""}`}
-                loading="lazy"
-              />
-            ))}
           </div>
         </AnimatedSection>
 

@@ -65,9 +65,6 @@ const resultDetails = {
     }
 };
 
-// --- Reusable Components ---
-
-// NEW: Animated circular gauge for confidence score
 const ConfidenceGauge = ({ value }) => {
     const radius = 50;
     const circumference = 2 * Math.PI * radius;
@@ -76,22 +73,13 @@ const ConfidenceGauge = ({ value }) => {
     return (
         <div className="gauge-container">
             <svg className="gauge-svg" viewBox="0 0 120 120">
-                <circle
-                    className="gauge-background"
-                    cx="60" cy="60" r={radius}
-                />
-                <circle
-                    className="gauge-foreground"
-                    cx="60" cy="60" r={radius}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                />
+                <circle className="gauge-background" cx="60" cy="60" r={radius} />
+                <circle className="gauge-foreground" cx="60" cy="60" r={radius} strokeDasharray={circumference} strokeDashoffset={offset} />
             </svg>
             <span className="gauge-text">{value}%</span>
         </div>
     );
 };
-
 
 const Result = () => {
     const { id } = useParams();
@@ -106,34 +94,22 @@ const Result = () => {
             setRecord(currentRecord);
         } else {
             console.error("No record found for this ID");
-            navigate('/predict/breast-cancer'); // Redirect if no record
+            navigate('/predict/breast-cancer');
         }
     }, [id, navigate]);
 
     if (!record) {
-        // A simple loading state
         return <div className="result-page-container"><h2>Loading result...</h2></div>;
     }
 
     const isPositive = record.result.prediction === 1;
-    // Assuming the API might not always return a probability. Defaulting to a high value for visual effect if missing.
     const confidence = record.result.probability ? (record.result.probability * 100).toFixed(1) : 95.2;
     const details = resultDetails[record.disease]?.[isPositive ? 'positive' : 'negative'];
-
-    // Find the original diseaseId to link back to the correct form
     const diseaseId = record.disease.toLowerCase().replace(' ', '-');
 
     return (
         <div className="result-page-container">
-            {/* Animated background */}
-            <div className="aurora-bg">
-                <div className="aurora-bg__c1"></div>
-                <div className="aurora-bg__c2"></div>
-                <div className="aurora-bg__c3"></div>
-            </div>
-
             <div className="result-layout">
-                {/* --- Left Column: Main Result --- */}
                 <div className="result-summary-column">
                     <div className="result-summary-card animate-in">
                         <p className="result-disease-name">Prediction for {record.disease}</p>
@@ -152,14 +128,12 @@ const Result = () => {
                             This is a machine learning prediction, not a medical diagnosis. Always consult a healthcare professional for medical advice.
                         </p>
                         <div className="result-actions">
-                            {/* UPDATED: Navigates back to the specific disease form */}
                             <button onClick={() => navigate(`/predict/${diseaseId}`)} className="action-button">New Prediction</button>
                             <Link to="/history" className="action-button secondary">View History</Link>
                         </div>
                     </div>
                 </div>
 
-                {/* --- Right Column: Details --- */}
                 <div className="result-details-column">
                     {details && (
                         <div className="details-card animate-in" style={{animationDelay: '0.1s'}}>
