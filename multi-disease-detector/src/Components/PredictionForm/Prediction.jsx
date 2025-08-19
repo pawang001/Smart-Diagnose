@@ -130,7 +130,7 @@ const Prediction = () => {
 
     const apiEndpoint = `${
       import.meta.env.VITE_API_URL || "http://127.0.0.1:5001"
-    }/predict/${modelConfig.apiPath}`;
+    }/${modelConfig.apiPath}`;
 
     try {
       const response = await axios.post(apiEndpoint, processedData);
